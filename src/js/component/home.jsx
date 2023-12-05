@@ -13,6 +13,13 @@ const TodoList = () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addTask();
+    }
+  };
+
   const toggleCompleted = (index) => {
     const updatedTasks = [...tasks];
     updatedTasks[index].isCompleted = !updatedTasks[index].isCompleted;
@@ -31,7 +38,16 @@ const TodoList = () => {
     <Card style={{ width: '300px', textAlign: 'center' }}>
       <Card.Body>
         <Card.Title style={{ borderBottom: '2px solid #000', paddingBottom: '10px' }}>Todo List</Card.Title>
-        <ul style={{ paddingLeft: '0', listStyle: 'none', textAlign: 'left' }}>
+        <ul
+          style={{
+            paddingLeft: '0',
+            listStyle: 'none',
+            textAlign: 'left',
+            display: 'flex',
+            flexDirection: 'column',
+            flexWrap: 'wrap', // Added flex-wrap property
+          }}
+        >
           {tasks.map((task, index) => (
             <li
               key={index}
@@ -40,25 +56,31 @@ const TodoList = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
+                wordWrap: 'break-word',
+                flex: '1', // Added flex property
               }}
             >
-              <span style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ display: 'flex', alignItems: 'center', flex: '1' }}>
                 <span style={{ marginRight: '5px' }}>{index + 1}.</span>
                 <span
                   style={{
                     textDecoration: task.isCompleted ? 'line-through' : 'none',
                     marginRight: '5px',
+                    maxWidth: '150px',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
                   }}
                 >
                   {task.text}
                 </span>
               </span>
-              <div>
+              <div
+                style={{display: 'flex'}}>
                 <Button
                   variant="secondary"
                   size="sm"
                   onClick={() => toggleCompleted(index)}
-                  style={{ marginRight: '5px' }}
+                  style={{ marginRight: '2px' }}
                 >
                   -
                 </Button>
@@ -66,7 +88,7 @@ const TodoList = () => {
                   variant="danger"
                   size="sm"
                   onClick={() => removeTask(index)}
-                  style={{ marginLeft: '5px' }}
+                  style={{ marginLeft: '2px' }}
                 >
                   Remove
                 </Button>
@@ -82,6 +104,7 @@ const TodoList = () => {
               placeholder="Add a new task"
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
+              onKeyDown={handleKeyDown}
               style={{ width: '200px', display: 'inline-block', marginRight: '5px' }}
             />
           </Form.Group>
@@ -97,6 +120,11 @@ const TodoList = () => {
 };
 
 export default TodoList;
+
+
+
+
+
 
 
 
