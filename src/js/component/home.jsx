@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Card, Button, Form } from 'react-bootstrap';
+import { Button, Card, Form } from 'react-bootstrap';
 
 const TodoList = () => {
   const [tasks, setTasks] = useState([]);
@@ -22,18 +22,19 @@ const TodoList = () => {
   const totalTasks = tasks.length;
 
   return (
-    <Card style={{ width: '300px', position: 'relative' }}>
+    <Card style={{ width: '300px', textAlign: 'center' }}>
       <Card.Body>
-        <Card.Title>Todo List</Card.Title>
-        <ul style={{ paddingLeft: '0', listStyle: 'none' }}>
+        <Card.Title style={{ borderBottom: '2px solid #000', paddingBottom: '10px' }}>Todo List</Card.Title>
+        <ul style={{ paddingLeft: '0', listStyle: 'none', textAlign: 'left' }}>
           {tasks.map((task, index) => (
-            <li key={index} style={{ position: 'relative', paddingRight: '40px' }}>
+            <li key={index} style={{ marginBottom: '10px' }}>
+              <span style={{ display: 'inline-block', marginRight: '10px', width: '20px' }}>{index + 1}.</span>
               {task}
               <Button
                 variant="danger"
                 size="sm"
                 onClick={() => removeTask(index)}
-                style={{ position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)' }}
+                style={{ marginLeft: '10px' }}
               >
                 Remove
               </Button>
@@ -41,19 +42,22 @@ const TodoList = () => {
           ))}
         </ul>
         <Form>
+          <div style={{ borderTop: '1px solid #ccc', margin: '15px 0' }}></div>
           <Form.Group controlId="newTask">
             <Form.Control
               type="text"
               placeholder="Add a new task"
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
+              style={{ width: '200px', display: 'inline-block', marginRight: '10px' }}
             />
           </Form.Group>
+          <div style={{ margin: '15px 0' }}></div>
           <Button variant="primary" onClick={addTask}>
             Add Task
           </Button>
         </Form>
-        <p>Total Tasks: {totalTasks}</p>
+        <p className="mt-3">Total Tasks: {totalTasks}</p>
       </Card.Body>
     </Card>
   );
