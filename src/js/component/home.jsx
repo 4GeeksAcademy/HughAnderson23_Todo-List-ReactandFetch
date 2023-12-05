@@ -17,6 +17,8 @@ const TodoList = () => {
     setTasks(updatedTasks);
   };
 
+  const totalTasks = tasks.length;
+
   return (
     <div>
       <h1>Todo List</h1>
@@ -32,11 +34,12 @@ const TodoList = () => {
         <input
           type="text"
           value={newTask}
-		  placeholder="What do you need to do?"
           onChange={(e) => setNewTask(e.target.value)}
+		  placeholder="What do you need to do?"
         />
         <button onClick={addTask}>Add Task</button>
       </div>
+      <p>Total Tasks: {totalTasks}</p>
     </div>
   );
 };
