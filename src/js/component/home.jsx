@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Card, Button, Form } from 'react-bootstrap';
 
 const TodoList = () => {
   const [tasks, setTasks] = useState([]);
@@ -20,27 +22,35 @@ const TodoList = () => {
   const totalTasks = tasks.length;
 
   return (
-    <div>
-      <h1>Todo List</h1>
-      <ul>
-        {tasks.map((task, index) => (
-          <li key={index}>
-            {task}
-            <button onClick={() => removeTask(index)}>Remove</button>
-          </li>
-        ))}
-      </ul>
-      <div>
-        <input
-          type="text"
-          value={newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-		  placeholder="What do you need to do?"
-        />
-        <button onClick={addTask}>Add Task</button>
-      </div>
-      <p>Total Tasks: {totalTasks}</p>
-    </div>
+    <Card>
+      <Card.Body>
+        <Card.Title>Todo List</Card.Title>
+        <ul>
+          {tasks.map((task, index) => (
+            <li key={index}>
+              {task}
+              <Button variant="danger" size="sm" onClick={() => removeTask(index)}>
+                Remove
+              </Button>
+            </li>
+          ))}
+        </ul>
+        <Form>
+          <Form.Group controlId="newTask">
+            <Form.Control
+              type="text"
+              placeholder="Add a new task"
+              value={newTask}
+              onChange={(e) => setNewTask(e.target.value)}
+            />
+          </Form.Group>
+          <Button variant="primary" onClick={addTask}>
+            Add Task
+          </Button>
+        </Form>
+        <p>Total Tasks: {totalTasks}</p>
+      </Card.Body>
+    </Card>
   );
 };
 
