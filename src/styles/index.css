@@ -23,7 +23,7 @@ body {
 .container {
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  /* padding: 20px; */
   border-radius: 5px;
   width: 300px;
   text-align: left;
@@ -35,11 +35,11 @@ h1 {
 
 ul {
   list-style: none;
-  padding: 0;
+  /* padding: 0 0 10px; */
 }
 
 li {
-  margin-bottom: 8px;
+  /* margin-bottom: 8px; */
 }
 
 input {

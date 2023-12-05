@@ -35,53 +35,76 @@ const TodoList = () => {
   const totalTasks = tasks.length;
 
   return (
-    <Card style={{ width: '300px', textAlign: 'left' }}>
+    <Card style={{ width: '300px',  }}>
       <Card.Body className="text-center">
-        <Card.Title style={{ borderBottom: '2px solid #000', paddingBottom: '10px' }}>Todo List</Card.Title>
+        <Card.Title style={{ borderBottom: '2px solid #000', paddingBottom: '10px' }}>To-do List</Card.Title>
         <ul style={{ paddingLeft: '0', listStyle: 'none' }}>
-          {tasks.map((task, index) => (
-            <li
-              key={index}
-              style={{
-                marginBottom: '10px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                wordWrap: 'break-word',
-              }}
-            >
-              <span style={{ marginRight: '5px' }}>{index + 1}.</span>
-              <span
-                style={{
-                  textDecoration: task.isCompleted ? 'line-through' : 'none',
-                  marginRight: '5px',
-                  maxWidth: '150px',
-                  overflowWrap: 'break-word',
-                  whiteSpace: 'normal',
-                  alignText: 'left',
-                }}
-              >
-                {task.text}
-              </span>
-              <div style={{ display: 'flex', alignItems:'flex-start', }}>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => toggleCompleted(index)}
-                  style={{ width: '20px', height: '20px', marginRight: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                >
-                  -
-                </Button>
-                <Button
-                  variant="danger"
-                  size="sm"
-                  onClick={() => removeTask(index)}
-                  style={{ width: '70px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                >
-                  Remove
-                </Button>
-              </div>
-            </li>
-          ))}
+
+
+{tasks.map((task, index) => (
+  <li
+    key={index}
+    style={{
+      marginBottom: '10px',
+      display: 'flex',
+      wordWrap: 'break-word',
+      position: 'relative', // Add this line
+    }}
+  >
+    <span style={{ marginRight: '5px' }}>{index + 1}.</span>
+    <span
+      style={{
+        textDecoration: task.isCompleted ? 'line-through' : 'none',
+        marginRight: '5px',
+        maxWidth: '150px',
+        overflowWrap: 'break-word',
+        whiteSpace: 'normal',
+        textAlign: 'left',
+      }}
+    >
+      {task.text}
+    </span>
+    <div style={{ 
+      position: 'absolute', // Add this line
+      right: '0',           // Add this line
+      display: 'flex',
+      justifyContent: 'right', 
+    }}>
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() => toggleCompleted(index)}
+        style={{ 
+          width: '20px', 
+          height: '20px',
+          marginRight: '3px', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+        }}
+      >
+        -
+      </Button>
+      <Button
+        variant="danger"
+        size="sm"
+        onClick={() => removeTask(index)}
+        style={{ 
+          width: '70px', 
+          height: '20px', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+        }}
+      >
+        Remove
+      </Button>
+    </div>
+  </li>
+))}
+
+
+
         </ul>
         <Form>
           <div style={{ borderTop: '1px solid #ccc', margin: '15px 0' }}></div>
