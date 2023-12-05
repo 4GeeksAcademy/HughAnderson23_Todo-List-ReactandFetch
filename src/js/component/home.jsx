@@ -22,14 +22,19 @@ const TodoList = () => {
   const totalTasks = tasks.length;
 
   return (
-    <Card>
+    <Card style={{ width: '300px', position: 'relative' }}>
       <Card.Body>
         <Card.Title>Todo List</Card.Title>
-        <ul>
+        <ul style={{ paddingLeft: '0', listStyle: 'none' }}>
           {tasks.map((task, index) => (
-            <li key={index}>
+            <li key={index} style={{ position: 'relative', paddingRight: '40px' }}>
               {task}
-              <Button variant="danger" size="sm" onClick={() => removeTask(index)}>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => removeTask(index)}
+                style={{ position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)' }}
+              >
                 Remove
               </Button>
             </li>
@@ -55,3 +60,5 @@ const TodoList = () => {
 };
 
 export default TodoList;
+
+
