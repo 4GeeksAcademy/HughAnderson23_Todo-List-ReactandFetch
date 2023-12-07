@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Card, Form } from 'react-bootstrap';
 
@@ -6,10 +6,89 @@ const TodoList = () => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
 
-  const addTask = () => {
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = async () => {
+    try {
+      const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/alesanchezr');
+      const data = await response.json();
+      setTasks(data);
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+    }
+  };
+
+  const addTask = async () => {
     if (newTask.trim() !== '') {
-      setTasks([...tasks, { text: newTask, isCompleted: false }]);
-      setNewTask('');
+      try {
+        const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/alesanchezr', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify([...tasks, { label: newTask, done: false }]),
+        });
+
+        if (response.ok) {
+          // Task added successfully, fetch updated tasks
+          fetchTasks();
+          setNewTask('');
+        } else {
+          console.error('Failed to add task');
+        }
+      } catch (error) {
+        console.error('Error adding task:', error);
+      }
+    }
+  };
+
+  const toggleCompleted = async (index) => {
+    const updatedTasks = [...tasks];
+    updatedTasks[index].done = !updatedTasks[index].done;
+
+    try {
+      const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/alesanchezr', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedTasks),
+      });
+
+      if (response.ok) {
+        // Task updated successfully, fetch updated tasks
+        fetchTasks();
+      } else {
+        console.error('Failed to update task');
+      }
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+  };
+
+  const removeTask = async (index) => {
+    const updatedTasks = [...tasks];
+    updatedTasks.splice(index, 1);
+
+    try {
+      const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/alesanchezr', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedTasks),
+      });
+
+      if (response.ok) {
+        // Task deleted successfully, fetch updated tasks
+        fetchTasks();
+      } else {
+        console.error('Failed to delete task');
+      }
+    } catch (error) {
+      console.error('Error deleting task:', error);
     }
   };
 
@@ -20,22 +99,10 @@ const TodoList = () => {
     }
   };
 
-  const toggleCompleted = (index) => {
-    const updatedTasks = [...tasks];
-    updatedTasks[index].isCompleted = !updatedTasks[index].isCompleted;
-    setTasks(updatedTasks);
-  };
-
-  const removeTask = (index) => {
-    const updatedTasks = [...tasks];
-    updatedTasks.splice(index, 1);
-    setTasks(updatedTasks);
-  };
-
   const totalTasks = tasks.length;
 
   return (
-    <Card style={{ width: '300px',  }}>
+    <Card style={{ width: '300px' }}>
       <Card.Body className="text-center">
         <Card.Title style={{ borderBottom: '2px solid #000', paddingBottom: '10px' }}>To-do List</Card.Title>
         <ul style={{ paddingLeft: '0', listStyle: 'none' }}>
