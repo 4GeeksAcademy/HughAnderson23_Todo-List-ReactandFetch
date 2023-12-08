@@ -17,26 +17,44 @@ const TodoList = () => {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      console.log('API Response:', data);
-      setTasks(data); 
-
-      // Add a log statement to check the state after setting tasks
-      console.log('State After Setting Tasks:', tasks);
+      setTasks(data);
     } catch (error) {
       console.error('Error fetching tasks:', error);
+    }
+  };
+
+  const createUserIfNeeded = async () => {
+    try {
+      const response = await fetch('https://playground.4geeks.com/apis/fake/user/HughAnderson23/');
+      if (!response.ok) {
+        const createUserResponse = await fetch('https://playground.4geeks.com/apis/fake/user/HughAnderson23/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({}),
+        });
+
+        if (!createUserResponse.ok) {
+          throw new Error('Failed to create user');
+        }
+      }
+    } catch (error) {
+      console.error('Error checking/creating user:', error);
     }
   };
 
   const addTask = async () => {
     if (newTask.trim() !== '') {
       try {
+        await createUserIfNeeded();
+
         const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/HughAnderson23');
         const existingTasks = await response.json();
   
-        let method = 'POST'; // Default to creating a new task list
+        let method = 'POST';
   
         if (Array.isArray(existingTasks) && existingTasks.length > 0) {
-          // If the user has existing tasks, use PUT to update the list
           method = 'PUT';
         }
   
@@ -49,7 +67,6 @@ const TodoList = () => {
         });
   
         if (updateResponse.ok) {
-          // Task added or updated successfully, fetch updated tasks
           fetchTasks();
           setNewTask('');
         } else {
@@ -58,6 +75,26 @@ const TodoList = () => {
       } catch (error) {
         console.error('Error adding or updating task:', error);
       }
+    }
+  };
+
+  const clearList = async () => {
+    try {
+      const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/HughAnderson23', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        // List cleared successfully, fetch updated tasks (empty list)
+        fetchTasks();
+      } else {
+        console.error('Failed to clear list');
+      }
+    } catch (error) {
+      console.error('Error clearing list:', error);
     }
   };
   
@@ -121,7 +158,7 @@ const TodoList = () => {
 
   console.log('Tasks Being Rendered:', tasks);
 
-    return (
+  return (
     <Card style={{ width: '300px' }}>
       <Card.Body className="text-center">
         <Card.Title style={{ borderBottom: '2px solid #000', paddingBottom: '10px' }}>To-do List</Card.Title>
@@ -206,8 +243,11 @@ const TodoList = () => {
           <Button variant="primary" onClick={addTask}>
             Add Task
           </Button>
+          <Button variant="danger" onClick={clearList} style={{ marginLeft: '10px' }}>
+            Clear List
+          </Button>
         </Form>
-        <p className="mt-3">Total Tasks: {totalTasks}</p>
+        <p className="mt-3">Total Tasks: {tasks.length}</p>
       </Card.Body>
     </Card>
   );
