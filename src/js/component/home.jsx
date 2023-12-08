@@ -12,11 +12,16 @@ const TodoList = () => {
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/user123/');
+      const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/HughAnderson23');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
       const data = await response.json();
-      console.log('API Response:', data); // Log the response to the console
-      // Assuming the response is an object with a 'todos' property
-      setTasks(data.todos || []);
+      console.log('API Response:', data);
+      setTasks(data); 
+
+      // Add a log statement to check the state after setting tasks
+      console.log('State After Setting Tasks:', tasks);
     } catch (error) {
       console.error('Error fetching tasks:', error);
     }
@@ -25,7 +30,7 @@ const TodoList = () => {
   const addTask = async () => {
     if (newTask.trim() !== '') {
       try {
-        const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/user123/');
+        const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/HughAnderson23');
         const existingTasks = await response.json();
   
         let method = 'POST'; // Default to creating a new task list
@@ -35,7 +40,7 @@ const TodoList = () => {
           method = 'PUT';
         }
   
-        const updateResponse = await fetch('https://playground.4geeks.com/apis/fake/todos/user/user123/', {
+        const updateResponse = await fetch('https://playground.4geeks.com/apis/fake/todos/user/HughAnderson23', {
           method: method,
           headers: {
             'Content-Type': 'application/json',
@@ -58,16 +63,16 @@ const TodoList = () => {
   
 
   const toggleCompleted = async (index) => {
-    const updatedTasks = [...tasks];
+    let updatedTasks = [...tasks];
     updatedTasks[index].done = !updatedTasks[index].done;
 
     try {
-      const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/user123/', {
+      const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/HughAnderson23', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ todos: updatedTasks }),
+        body: JSON.stringify(updatedTasks),
       });
 
       if (response.ok) {
@@ -82,16 +87,16 @@ const TodoList = () => {
   };
 
   const removeTask = async (index) => {
-    const updatedTasks = [...tasks];
+    let updatedTasks = [...tasks];
     updatedTasks.splice(index, 1);
 
     try {
-      const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/user123/', {
+      const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/HughAnderson23', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ todos: updatedTasks }),
+        body: JSON.stringify(updatedTasks),
       });
 
       if (response.ok) {
@@ -114,7 +119,9 @@ const TodoList = () => {
 
   const totalTasks = tasks.length;
 
-  return (
+  console.log('Tasks Being Rendered:', tasks);
+
+    return (
     <Card style={{ width: '300px' }}>
       <Card.Body className="text-center">
         <Card.Title style={{ borderBottom: '2px solid #000', paddingBottom: '10px' }}>To-do List</Card.Title>
