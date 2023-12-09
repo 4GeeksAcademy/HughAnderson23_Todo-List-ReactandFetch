@@ -7,6 +7,7 @@ const TodoList = () => {
   const [newTask, setNewTask] = useState('');
 
   useEffect(() => {
+    createUserIfNeeded();
     fetchTasks();
   }, []);
 
@@ -25,9 +26,9 @@ const TodoList = () => {
 
   const createUserIfNeeded = async () => {
     try {
-      const response = await fetch('https://playground.4geeks.com/apis/fake/user/HughAnderson23/');
+      const response = await fetch('https://playground.4geeks.com/apis/fake/user/HughAnderson23');
       if (!response.ok) {
-        const createUserResponse = await fetch('https://playground.4geeks.com/apis/fake/user/HughAnderson23/', {
+        const createUserResponse = await fetch('https://playground.4geeks.com/apis/fake/user/HughAnderson23', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -47,17 +48,17 @@ const TodoList = () => {
   const addTask = async () => {
     if (newTask.trim() !== '') {
       try {
-        await createUserIfNeeded();
+        
 
         const response = await fetch('https://playground.4geeks.com/apis/fake/todos/user/HughAnderson23');
         const existingTasks = await response.json();
-  
+
         let method = 'POST';
-  
+
         if (Array.isArray(existingTasks) && existingTasks.length > 0) {
           method = 'PUT';
         }
-  
+
         const updateResponse = await fetch('https://playground.4geeks.com/apis/fake/todos/user/HughAnderson23', {
           method: method,
           headers: {
@@ -65,7 +66,7 @@ const TodoList = () => {
           },
           body: JSON.stringify([...existingTasks, { label: newTask, done: false }]),
         });
-  
+
         if (updateResponse.ok) {
           fetchTasks();
           setNewTask('');
@@ -97,7 +98,6 @@ const TodoList = () => {
       console.error('Error clearing list:', error);
     }
   };
-  
 
   const toggleCompleted = async (index) => {
     let updatedTasks = [...tasks];
@@ -156,14 +156,12 @@ const TodoList = () => {
 
   const totalTasks = tasks.length;
 
-  console.log('Tasks Being Rendered:', tasks);
-
   return (
     <Card style={{ width: '300px' }}>
       <Card.Body className="text-center">
         <Card.Title style={{ borderBottom: '2px solid #000', paddingBottom: '10px' }}>To-do List</Card.Title>
         <ul style={{ paddingLeft: '0', listStyle: 'none' }}>
-          {tasks.map((task, index) => (
+          {tasks?.map((task, index) => (
             <li
               key={index}
               style={{
@@ -195,7 +193,7 @@ const TodoList = () => {
                 }}
               >
                 <Button
-                  variant="secondary"
+                  variant="success"
                   size="sm"
                   onClick={() => toggleCompleted(index)}
                   style={{
@@ -207,21 +205,22 @@ const TodoList = () => {
                     justifyContent: 'center',
                   }}
                 >
-                  -
+                  ✓
                 </Button>
                 <Button
                   variant="danger"
                   size="sm"
                   onClick={() => removeTask(index)}
                   style={{
-                    width: '70px',
+                    width: '20px',
                     height: '20px',
+                    marginLeft: '3px',  // Adjusted margin to align with the green button
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}
                 >
-                  Remove
+                  🚫
                 </Button>
               </div>
             </li>
@@ -244,13 +243,15 @@ const TodoList = () => {
             Add Task
           </Button>
           <Button variant="danger" onClick={clearList} style={{ marginLeft: '10px' }}>
-            Clear List
+            Clear Tasks
           </Button>
         </Form>
-        <p className="mt-3">Total Tasks: {tasks.length}</p>
+        <p className="mt-3">Total Tasks: {totalTasks}</p>
       </Card.Body>
     </Card>
   );
 };
 
 export default TodoList;
+
+
